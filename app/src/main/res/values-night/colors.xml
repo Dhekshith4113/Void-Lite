@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="divider_grey">#222222</color>
+    <color name="new_app_indicator">#888888</color>
+    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="backgroundColor">#000000</color>
+    <color name="enable">#006600</color>
+    <color name="disable">#660000</color>
+
+    <color name="themed_icon_background">#FF808080</color>
+    <color name="themed_icon_foreground">#FF000000</color>
+</resources>

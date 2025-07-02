@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppTitleText">
+        <item name="android:fontFamily">@font/minima_font_family</item>
+        <item name="android:textSize">20sp</item> <!-- Set your global preferred size here -->
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="AppBaseText">
+        <item name="android:fontFamily">@font/minima_font_family</item>
+        <item name="android:textSize">18sp</item> <!-- Set your global preferred size here -->
+        <item name="android:textColor">@color/textColorPrimary</item>
+    </style>
+
+    <style name="CustomDialogTheme" parent="Theme.MaterialComponents.Dialog">
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:windowBackground">@drawable/dialog_background</item> <!-- Rounded background -->
+    </style>
+</resources>

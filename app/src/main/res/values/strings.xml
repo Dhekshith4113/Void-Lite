@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Void Lite</string>
+    <string name="accessibility_service_description">This service is used to lock the phone.</string>
+    <string name="accessibility_description">This service is used to lock the phone.</string>
+</resources>
