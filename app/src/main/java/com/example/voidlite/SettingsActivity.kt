@@ -111,7 +111,7 @@ class SettingsActivity : AppCompatActivity() {
             options
         ) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-                if (position == options.size - 2) {
+                if (position == options.size - 1) {
                     appUsageView = LayoutInflater.from(context).inflate(R.layout.app_usage_layout, parent, false)
                     val visibleLayout: ConstraintLayout = appUsageView.findViewById(R.id.visibleLayout)
                     visibilityToggle = appUsageView.findViewById(R.id.visibilityToggle)
