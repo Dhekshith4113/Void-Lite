@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
 import android.os.UserHandle
@@ -27,6 +28,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import kotlin.math.abs
 
 class MainActivity : AppCompatActivity(), GradientUpdateListener {
@@ -78,8 +80,13 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             })
 
         if (SharedPreferencesManager.isAppDrawerEnabled(this)) {
-            val appDrawerRowSize = SharedPreferencesManager.getAppDrawerRowSize(this)
-            recyclerView.layoutManager = GridLayoutManager(this, appDrawerRowSize)
+            if (SharedPreferencesManager.isLandscapeMode(this)) {
+                val appDrawerRowSize = SharedPreferencesManager.getAppDrawerRowSizeLandscape(this)
+                recyclerView.layoutManager = GridLayoutManager(this, appDrawerRowSize)
+            } else {
+                val appDrawerRowSize = SharedPreferencesManager.getAppDrawerRowSize(this)
+                recyclerView.layoutManager = GridLayoutManager(this, appDrawerRowSize)
+            }
         } else {
             recyclerView.layoutManager = LinearLayoutManager(this)
         }
@@ -101,8 +108,6 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         setupAlphabetScroller()
 
         drawerRecyclerView = findViewById(R.id.appDrawerRecyclerView)
-        val centerSpacing = CenterSpacingDecoration()
-
         drawerRecyclerView.visibility = if (SharedPreferencesManager.isMiniDrawerEnabled(this)) {
             View.VISIBLE
         } else {
@@ -120,9 +125,13 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         )
 
         drawerRecyclerView.apply {
-            layoutManager =
-                LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
-            addItemDecoration(centerSpacing)
+            if (SharedPreferencesManager.isLandscapeMode(this@MainActivity)) {
+                layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+                addItemDecoration(CenterSpacingLandscape())
+            } else {
+                layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.HORIZONTAL, false)
+                addItemDecoration(CenterSpacingDecoration())
+            }
             adapter = drawerAdapter
             itemAnimator = null // Remove animations
 
@@ -132,7 +141,11 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                 override fun onGlobalLayout() {
                     viewTreeObserver.removeOnGlobalLayoutListener(this)
                     post {
-                        centerSpacing.invalidateSpacing()
+                        if (SharedPreferencesManager.isLandscapeMode(context)) {
+                            CenterSpacingLandscape().invalidateSpacing()
+                        } else {
+                            CenterSpacingDecoration().invalidateSpacing()
+                        }
                         invalidateItemDecorations()
                     }
                 }
@@ -309,7 +322,11 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
 
                     // Force layout refresh
                     drawerRecyclerView.post {
-                        centerSpacing.invalidateSpacing()
+                        if (SharedPreferencesManager.isLandscapeMode(this)) {
+                            CenterSpacingLandscape().invalidateSpacing()
+                        } else {
+                            CenterSpacingDecoration().invalidateSpacing()
+                        }
                         drawerRecyclerView.invalidateItemDecorations()
                     }
                     true
@@ -802,6 +819,16 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
 
     private fun openSettings() {
         startActivity(Intent(this, SettingsActivity::class.java))
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            SharedPreferencesManager.setLandscapeMode(this, true)
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            SharedPreferencesManager.setLandscapeMode(this, false)
+        }
+        recreate()
     }
 
 }

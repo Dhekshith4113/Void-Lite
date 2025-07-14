@@ -467,6 +467,8 @@ class SettingsActivity : AppCompatActivity() {
 
         val appListTv: TextView = dialogView.findViewById(R.id.appListTv)
         val appListSc: SwitchCompat = dialogView.findViewById(R.id.appListSc)
+        val rowSizeFour: RadioButton = dialogView.findViewById(R.id.rowSizeFour)
+        val rowSizeFive: RadioButton = dialogView.findViewById(R.id.rowSizeFive)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
         dialogView.findViewById<SwitchCompat>(R.id.miniDrawerSwitch).isChecked = SharedPreferencesManager.isMiniDrawerEnabled(this)
@@ -479,15 +481,32 @@ class SettingsActivity : AppCompatActivity() {
             appListTv.text = "Hide app name"
             appListSc.isChecked = SharedPreferencesManager.isHideAppNameEnabled(this)
 
-            if (SharedPreferencesManager.getAppDrawerRowSize(this) == 4) {
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFour).isChecked = true
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFive).isChecked = false
-            } else if (SharedPreferencesManager.getAppDrawerRowSize(this) == 5) {
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFour).isChecked = false
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFive).isChecked = true
-            }else {
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFour).isChecked = false
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFive).isChecked = false
+            if (SharedPreferencesManager.isLandscapeMode(this)) {
+                rowSizeFour.text = "6"
+                rowSizeFive.text = "7"
+                if (SharedPreferencesManager.getAppDrawerRowSizeLandscape(this) == 6) {
+                    rowSizeFour.isChecked = true
+                    rowSizeFive.isChecked = false
+                } else if (SharedPreferencesManager.getAppDrawerRowSizeLandscape(this) == 7) {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = true
+                } else {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = false
+                }
+            } else {
+                rowSizeFour.text = "4"
+                rowSizeFive.text = "5"
+                if (SharedPreferencesManager.getAppDrawerRowSize(this) == 4) {
+                    rowSizeFour.isChecked = true
+                    rowSizeFive.isChecked = false
+                } else if (SharedPreferencesManager.getAppDrawerRowSize(this) == 5) {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = true
+                } else {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = false
+                }
             }
 
         } else {
@@ -529,15 +548,28 @@ class SettingsActivity : AppCompatActivity() {
             appListSc.isChecked = SharedPreferencesManager.isHideAppNameEnabled(this)
             dialogView.findViewById<LinearLayout>(R.id.appDrawerRowSize).visibility = View.VISIBLE
 
-            if (SharedPreferencesManager.getAppDrawerRowSize(this) == 4) {
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFour).isChecked = true
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFive).isChecked = false
-            } else if (SharedPreferencesManager.getAppDrawerRowSize(this) == 5) {
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFour).isChecked = false
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFive).isChecked = true
-            }else {
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFour).isChecked = false
-                dialogView.findViewById<RadioButton>(R.id.rowSizeFive).isChecked = false
+            if (SharedPreferencesManager.isLandscapeMode(this)) {
+                if (SharedPreferencesManager.getAppDrawerRowSizeLandscape(this) == 6) {
+                    rowSizeFour.isChecked = true
+                    rowSizeFive.isChecked = false
+                } else if (SharedPreferencesManager.getAppDrawerRowSizeLandscape(this) == 7) {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = true
+                } else {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = false
+                }
+            } else {
+                if (SharedPreferencesManager.getAppDrawerRowSize(this) == 4) {
+                    rowSizeFour.isChecked = true
+                    rowSizeFive.isChecked = false
+                } else if (SharedPreferencesManager.getAppDrawerRowSize(this) == 5) {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = true
+                } else {
+                    rowSizeFour.isChecked = false
+                    rowSizeFive.isChecked = false
+                }
             }
         }
 
@@ -551,10 +583,12 @@ class SettingsActivity : AppCompatActivity() {
 
         dialogView.findViewById<RadioButton>(R.id.rowSizeFour).setOnClickListener {
             SharedPreferencesManager.setAppDrawerRowSize(this, 4)
+            SharedPreferencesManager.setAppDrawerRowSizeLandscape(this, 6)
         }
 
         dialogView.findViewById<RadioButton>(R.id.rowSizeFive).setOnClickListener {
             SharedPreferencesManager.setAppDrawerRowSize(this, 5)
+            SharedPreferencesManager.setAppDrawerRowSizeLandscape(this, 7)
         }
 
         dialogView.findViewById<SwitchCompat>(R.id.miniDrawerSwitch).setOnCheckedChangeListener { _, isChecked ->

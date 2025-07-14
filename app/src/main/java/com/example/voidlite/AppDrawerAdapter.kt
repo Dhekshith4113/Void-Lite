@@ -23,6 +23,7 @@ import android.net.Uri
 import android.os.Build
 import android.provider.Settings
 import android.view.GestureDetector
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -272,13 +273,22 @@ class AppDrawerAdapter(
             }
             holder.name.text = ""
 
-            if (SharedPreferencesManager.isShowMiniAppNameEnabled(context)) {
-                holder.name.visibility = View.VISIBLE
-                holder.miniDrawerLayout.setPadding(0, 6.dp, 0, 6.dp)
+            if (SharedPreferencesManager.isLandscapeMode(context)) {
+                if (SharedPreferencesManager.isShowMiniAppNameEnabled(context)) {
+                    holder.name.visibility = View.VISIBLE
+                } else {
+                    holder.name.visibility = View.GONE
+                }
             } else {
-                holder.name.visibility = View.GONE
-                holder.miniDrawerLayout.setPadding(0, 18.dp, 0, 0)
+                if (SharedPreferencesManager.isShowMiniAppNameEnabled(context)) {
+                    holder.name.visibility = View.VISIBLE
+                    holder.miniDrawerLayout.setPadding(0, 6.dp, 0, 6.dp)
+                } else {
+                    holder.name.visibility = View.GONE
+                    holder.miniDrawerLayout.setPadding(0, 18.dp, 0, 0)
+                }
             }
+
             holder.itemView.setOnLongClickListener(null)
         } else {
             holder.name.text = MainActivity().normalizeAppName(app.loadLabel(pm).toString())
@@ -294,12 +304,20 @@ class AppDrawerAdapter(
                 }
             }
 
-            if (SharedPreferencesManager.isShowMiniAppNameEnabled(context)) {
-                holder.name.visibility = View.VISIBLE
-                holder.miniDrawerLayout.setPadding(0, 6.dp, 0, 6.dp)
+            if (SharedPreferencesManager.isLandscapeMode(context)) {
+                if (SharedPreferencesManager.isShowMiniAppNameEnabled(context)) {
+                    holder.name.visibility = View.VISIBLE
+                } else {
+                    holder.name.visibility = View.GONE
+                }
             } else {
-                holder.name.visibility = View.GONE
-                holder.miniDrawerLayout.setPadding(0, 18.dp, 0, 18.dp)
+                if (SharedPreferencesManager.isShowMiniAppNameEnabled(context)) {
+                    holder.name.visibility = View.VISIBLE
+                    holder.miniDrawerLayout.setPadding(0, 6.dp, 0, 6.dp)
+                } else {
+                    holder.name.visibility = View.GONE
+                    holder.miniDrawerLayout.setPadding(0, 18.dp, 0, 18.dp)
+                }
             }
 
             holder.itemView.setOnLongClickListener {

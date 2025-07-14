@@ -15,6 +15,7 @@ object SharedPreferencesManager {
     private const val KEY_IS_REFRESH_VIEW_ENABLED = "is_refresh_view_enabled"
     private const val KEY_IS_MINI_APP_NAME_TOGGLE_ENABLED = "is_mini_app_name_toggle_enabled"
     private const val KEY_IS_MINI_DRAWER_TOGGLE_ENABLED = "is_mini_drawer_toggle_enabled"
+    private const val KEY_LANDSCAPE_MODE = "landscape_mode"
 
     private fun getPrefs(context: Context): SharedPreferences {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
@@ -126,6 +127,16 @@ object SharedPreferencesManager {
         sharedPrefs.edit().putInt("app_drawer_row_size", count).apply()
     }
 
+    fun getAppDrawerRowSizeLandscape(context: Context): Int {
+        val sharedPrefs = context.getSharedPreferences("launcher_prefs", Context.MODE_PRIVATE)
+        return sharedPrefs.getInt("app_drawer_row_size_landscape", 6)
+    }
+
+    fun setAppDrawerRowSizeLandscape(context: Context, count: Int) {
+        val sharedPrefs = context.getSharedPreferences("launcher_prefs", Context.MODE_PRIVATE)
+        sharedPrefs.edit().putInt("app_drawer_row_size_landscape", count).apply()
+    }
+
     fun getAppIconShape(context: Context): String? {
         val sharedPrefs = context.getSharedPreferences("launcher_prefs", Context.MODE_PRIVATE)
         return sharedPrefs.getString("app_icon_shape", "round")
@@ -134,5 +145,13 @@ object SharedPreferencesManager {
     fun setAppIconShape(context: Context, shape: String) {
         val sharedPrefs = context.getSharedPreferences("launcher_prefs", Context.MODE_PRIVATE)
         sharedPrefs.edit().putString("app_icon_shape", shape).apply()
+    }
+
+    fun isLandscapeMode(context: Context): Boolean {
+        return getPrefs(context).getBoolean(KEY_LANDSCAPE_MODE, false)
+    }
+
+    fun setLandscapeMode(context: Context, enabled: Boolean) {
+        getPrefs(context).edit().putBoolean(KEY_LANDSCAPE_MODE, enabled).apply()
     }
 }
