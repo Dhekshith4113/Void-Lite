@@ -44,7 +44,7 @@
             android:layout_height="100dp"
             android:overScrollMode="never"
             android:scrollbars="none"
-            android:background="@color/divider_grey"
+            android:background="@android:color/transparent"
             android:paddingVertical="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -43,7 +43,7 @@
             android:layout_height="match_parent"
             android:overScrollMode="never"
             android:scrollbars="none"
-            android:background="@color/divider_grey"
+            android:background="@android:color/transparent"
             android:paddingHorizontal="26dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"

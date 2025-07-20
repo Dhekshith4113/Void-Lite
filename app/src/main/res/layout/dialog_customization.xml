@@ -1,255 +1,265 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="18dp"
     android:background="@drawable/dialog_background"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textView5"
-        style="@style/AppTitleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Customization" />
-
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5">
-
-        <RadioButton
-            android:id="@+id/appListBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="App List"
-            style="@style/AppBaseText"/>
-
-        <RadioButton
-            android:id="@+id/appDrawerBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="App Drawer"
-            style="@style/AppBaseText"/>
-
-    </RadioGroup>
+    android:padding="4dp"
+    android:scrollbars="vertical"
+    android:scrollbarSize="6dp"
+    android:fadeScrollbars="false">
 
     <LinearLayout
-        android:id="@+id/appList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:padding="14dp"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/appListTv"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Show app icon"
-            style="@style/AppBaseText"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/appListSc"
+            android:id="@+id/textView5"
+            style="@style/AppTitleText"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/appDrawerRowSize"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:text="Row size"
-            style="@style/AppBaseText"/>
+            android:text="Customization" />
 
         <RadioGroup
-            android:layout_width="wrap_content"
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView5">
 
             <RadioButton
-                android:id="@+id/rowSizeFour"
+                android:id="@+id/appListBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
+                android:layout_weight="1"
+                android:text="App List"
                 style="@style/AppBaseText"/>
 
             <RadioButton
-                android:id="@+id/rowSizeFive"
+                android:id="@+id/appDrawerBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="5"
+                android:layout_weight="1"
+                android:text="App Drawer"
                 style="@style/AppBaseText"/>
 
         </RadioGroup>
 
-    </LinearLayout>
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider_grey"/>
-
-    <LinearLayout
-        android:id="@+id/miniDrawer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            style="@style/AppBaseText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Show mini drawer" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/miniDrawerSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/miniDrawerAppName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Show app name"
-            style="@style/AppBaseText"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/miniDrawerAppNameSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/miniDrawerAppCount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:text="App count"
-            style="@style/AppBaseText"/>
-
-        <ImageButton
-            android:id="@+id/incrementButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="Add"
-            android:src="@drawable/sharp_add_24"
-            android:background="@android:color/transparent"
-            app:tint="@color/textColorPrimary" />
-
-        <TextView
-            android:id="@+id/countTextView"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:text="0"
-            style="@style/AppBaseText"/>
-
-        <ImageButton
-            android:id="@+id/decrementButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:contentDescription="Remove"
-            android:src="@drawable/sharp_remove_24"
-            android:background="@android:color/transparent"
-            app:tint="@color/textColorPrimary" />
-
-    </LinearLayout>
-
-    <View
-        android:id="@+id/view2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/divider_grey"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Apply theme for app icons"
-            style="@style/AppBaseText"/>
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/applyThemedIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/appIconShape"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:text="App icon shape"
-            style="@style/AppBaseText"/>
-
-        <RadioGroup
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/appList"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/roundAppIcon"
-                android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/appListTv"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Round"
+                android:layout_weight="1"
+                android:text="Show app icon"
                 style="@style/AppBaseText"/>
 
-            <RadioButton
-                android:id="@+id/squricleAppIcon"
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/appListSc"
                 android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/appDrawerRowSize"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Squricle"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:text="Row size"
                 style="@style/AppBaseText"/>
 
-        </RadioGroup>
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rowSizeFour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    style="@style/AppBaseText"/>
+
+                <RadioButton
+                    android:id="@+id/rowSizeFive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="5"
+                    style="@style/AppBaseText"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_grey"/>
+
+        <LinearLayout
+            android:id="@+id/miniDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/AppBaseText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Show mini drawer" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/miniDrawerSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/miniDrawerAppName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Show app name"
+                style="@style/AppBaseText"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/miniDrawerAppNameSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/miniDrawerAppCount"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:text="App count"
+                style="@style/AppBaseText"/>
+
+            <ImageButton
+                android:id="@+id/incrementButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="Add"
+                android:src="@drawable/sharp_add_24"
+                android:background="@android:color/transparent"
+                app:tint="@color/textColorPrimary" />
+
+            <TextView
+                android:id="@+id/countTextView"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="0"
+                style="@style/AppBaseText"/>
+
+            <ImageButton
+                android:id="@+id/decrementButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="Remove"
+                android:src="@drawable/sharp_remove_24"
+                android:background="@android:color/transparent"
+                app:tint="@color/textColorPrimary" />
+
+        </LinearLayout>
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_grey"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Apply theme for app icons"
+                style="@style/AppBaseText"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/applyThemedIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/appIconShape"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:text="App icon shape"
+                style="@style/AppBaseText"/>
+
+            <RadioGroup
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/roundAppIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Round"
+                    style="@style/AppBaseText"/>
+
+                <RadioButton
+                    android:id="@+id/squricleAppIcon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Squricle"
+                    style="@style/AppBaseText"/>
+
+            </RadioGroup>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</ScrollView>

@@ -18,7 +18,7 @@ class GradientOverlayView @JvmOverloads constructor(
 
     private var topGradientAlpha = 0f
     private var bottomGradientAlpha = 1f
-    private val gradientHeight = 40f // Height of gradient in dp
+    private val gradientHeight = 120f // Height of gradient in dp
 
     private val topGradient: LinearGradient by lazy {
         val height = (gradientHeight * context.resources.displayMetrics.density).toInt()

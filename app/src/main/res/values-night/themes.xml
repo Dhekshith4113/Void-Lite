@@ -17,7 +17,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Apply default font family -->
-        <item name="android:fontFamily">@font/minima_font_family</item>
+<!--        <item name="android:fontFamily">@font/minima_font_family</item>-->
         <!-- Default font size for all body text -->
         <item name="textAppearanceBody1">@style/AppBaseText</item>
     </style>
