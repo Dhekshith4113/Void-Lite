@@ -40,6 +40,7 @@ class AppListAdapter(
     private var apps: MutableList<ApplicationInfo>,
     private val pm: PackageManager,
     val refreshList: () -> Unit,
+    val hideApp: (ApplicationInfo) -> Unit,
     var onAppDragStarted: ((ApplicationInfo) -> Unit)? = null
 ) : RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
 
@@ -382,7 +383,11 @@ class AppListAdapter(
         if (SharedPreferencesManager.isThemedIconsEnabled(context)) {
             iconImageView.setImageDrawable(loadThemedIcon(appInfo))
         } else {
-            iconImageView.setImageDrawable(appInfo.loadIcon(pm))
+            if (SharedPreferencesManager.getAppIconShape(context) == "round") {
+                iconImageView.setImageDrawable(loadRegularIcon(appInfo))
+            } else {
+                iconImageView.setImageDrawable(appInfo.loadIcon(pm))
+            }
         }
 
         val dialog = AlertDialog.Builder(context)
@@ -397,6 +402,13 @@ class AppListAdapter(
             val intent = Intent(Intent.ACTION_DELETE, packageUri)
             context.startActivity(intent)
             refreshList()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = "Hide app"
+
+        dialogView.findViewById<TextView>(R.id.hideAppBtn).setOnClickListener {
+            hideApp(appInfo)
             dialog.dismiss()
         }
 
@@ -462,7 +474,13 @@ class AppIconDragShadowBuilder(val context: Context, appInfo: ApplicationInfo, p
         val pm = context.packageManager
         icon = if (SharedPreferencesManager.isThemedIconsEnabled(context)) {
             loadThemedIcon(appInfo)
-        } else appInfo.loadIcon(pm)
+        } else {
+            if (SharedPreferencesManager.getAppIconShape(context) == "round") {
+                loadRegularIcon(appInfo)
+            } else {
+                appInfo.loadIcon(pm)
+            }
+        }
         icon.setBounds(0, 0, 48.dp, 48.dp)
     }
 
@@ -476,6 +494,74 @@ class AppIconDragShadowBuilder(val context: Context, appInfo: ApplicationInfo, p
     }
 
     private val Int.dp: Int get() = (this * context.resources.displayMetrics.density).toInt()
+
+    private fun loadRegularIcon(app: ApplicationInfo): Drawable {
+        return try {
+            val regularIcon = app.loadIcon(pm)
+            applyShapedIconStyling(regularIcon)
+        } catch (e: Exception) {
+            app.loadIcon(pm)
+        }
+    }
+
+    private fun applyShapedIconStyling(regularIcon: Drawable): Drawable {
+        // Create a bitmap from the regular icon
+        val iconBitmap = drawableToBitmap(regularIcon)
+
+        // Create a shaped bitmap
+        val shapedBitmap = createShapedBitmap(iconBitmap)
+
+        return BitmapDrawable(context.resources, shapedBitmap)
+    }
+
+    private fun drawableToBitmap(drawable: Drawable): Bitmap {
+        if (drawable is BitmapDrawable) {
+            return drawable.bitmap
+        }
+
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth.takeIf { it > 0 } ?: 512,
+            drawable.intrinsicHeight.takeIf { it > 0 } ?: 512,
+            Bitmap.Config.ARGB_8888
+        )
+
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.width, canvas.height)
+        drawable.draw(canvas)
+        return bitmap
+    }
+
+    private fun createShapedBitmap(originalBitmap: Bitmap): Bitmap {
+        val size = maxOf(originalBitmap.width, originalBitmap.height)
+        println(size)
+        val outputBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(outputBitmap)
+
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+        // Create perfect circular path
+        val path = Path()
+        val radius = size / 2.1f
+        path.addCircle(size / 2f, size / 2f, radius, Path.Direction.CW)
+
+        // Clip canvas to the circular shape
+        canvas.clipPath(path)
+
+        // Scale and center the original bitmap
+        val scale = size.toFloat() / maxOf(originalBitmap.width, originalBitmap.height)
+        val scaledWidth = originalBitmap.width * scale
+        val scaledHeight = originalBitmap.height * scale
+        val left = (size - scaledWidth) / 2f
+        val top = (size - scaledHeight) / 2f
+
+        val matrix = Matrix()
+        matrix.setScale(scale, scale)
+        matrix.postTranslate(left, top)
+
+        canvas.drawBitmap(originalBitmap, matrix, paint)
+
+        return outputBitmap
+    }
 
     private fun loadThemedIcon(app: ApplicationInfo): Drawable {
         return try {

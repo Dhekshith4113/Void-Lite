@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         val firstTime = prefsInstalledApps.getBoolean("first_time", false)
 
         if (!firstTime) {
-            saveListApps(loadListApps())
+            saveListApps(this, loadListApps(this))
             prefsInstalledApps.edit().putBoolean("first_time", true).apply()
         }
 
@@ -74,9 +74,14 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
 
         recyclerView = findViewById(R.id.recyclerView)
 
-        listAdapter =
-            AppListAdapter(this, loadListApps().toMutableList(), packageManager, refreshList = {
+        listAdapter = AppListAdapter(this, loadListApps(this).toMutableList(), packageManager,
+            refreshList = {
                 needRefresh = true
+            },
+            hideApp = { app ->
+                listAdapter.removeApp(app)
+                saveHiddenListApps(this, loadHiddenListApps(this) + app)
+                saveListApps(this, listAdapter.getApps())
             })
 
         if (SharedPreferencesManager.isAppDrawerEnabled(this)) {
@@ -121,8 +126,13 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             ::saveDrawerApps,
             refreshList = {
                 needRefresh = true
-            }
-        )
+            },
+            hideApp = { app ->
+                drawerAdapter.removeApp(app)
+                saveHiddenListApps(this, loadHiddenListApps(this) + app)
+                saveDrawerApps(drawerAdapter.getApps()
+                    .filter { it.packageName != AppDrawerAdapter.DROP_INDICATOR_PACKAGE })
+            })
 
         drawerRecyclerView.apply {
             if (SharedPreferencesManager.isLandscapeMode(this@MainActivity)) {
@@ -196,6 +206,9 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                                 "Cannot add more than $drawerSize apps",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            drawerAdapter.removeDropIndicator()
+                            listAdapter.addApp(draggedApp)
+                            saveListApps(this, loadListApps(this))
                             shouldMoveIndicator = false
                             toastShownThisDrag = true
                         }
@@ -318,7 +331,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                     saveDrawerApps(
                         drawerAdapter.getApps()
                             .filter { it.packageName != AppDrawerAdapter.DROP_INDICATOR_PACKAGE })
-                    saveListApps(listAdapter.getApps())
+                    saveListApps(this, listAdapter.getApps())
 
                     // Force layout refresh
                     drawerRecyclerView.post {
@@ -352,7 +365,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                     saveDrawerApps(
                         drawerAdapter.getApps()
                             .filter { it.packageName != AppDrawerAdapter.DROP_INDICATOR_PACKAGE })
-                    saveListApps(listAdapter.getApps())
+                    saveListApps(this, listAdapter.getApps())
                     true
                 }
 
@@ -400,7 +413,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         checkNewlyInstalledApps()
         if (needRefresh) {
             listAdapter.setApps(getNewlyInstalledApps())
-            listAdapter.updateData(loadListApps().toMutableList())
+            listAdapter.updateData(loadListApps(this).toMutableList())
             drawerAdapter.updateData(loadDrawerApps().toMutableList())
             needRefresh = false
         }
@@ -413,12 +426,12 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                 for (app in loadDrawerApps()) {
                     listAdapter.addApp(app)
                 }
-                saveListApps(listAdapter.getApps())
+                saveListApps(this, listAdapter.getApps())
             } else {
                 for (app in loadDrawerApps()) {
                     listAdapter.removeApp(app)
                 }
-                saveListApps(listAdapter.getApps())
+                saveListApps(this, listAdapter.getApps())
             }
             val miniAppDrawerCount = SharedPreferencesManager.getMiniAppDrawerCount(this)
             if (miniAppDrawerCount < drawerAdapter.getApps().size) {
@@ -427,7 +440,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                     drawerAdapter.removeApp(extraApp)
                     listAdapter.addApp(extraApp)
                     saveDrawerApps(drawerAdapter.getApps())
-                    saveListApps(listAdapter.getApps())
+                    saveListApps(this, listAdapter.getApps())
                 }
             }
             finish()
@@ -574,9 +587,11 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         val prefsNewApps = getSharedPreferences("new_apps", MODE_PRIVATE)
         val prefsList = getSharedPreferences("list_prefs", MODE_PRIVATE)
         val prefsDrawer = getSharedPreferences("drawer_prefs", MODE_PRIVATE)
+        val prefsHiddenList = getSharedPreferences("hidden_list_prefs", MODE_PRIVATE)
         val currentAppList = prefsList.getStringSet("list_packages", emptySet()) ?: emptySet()
         val currentDrawerList = prefsDrawer.getString("drawer_ordered_packages", "")?.split(",")
             ?.filter { it.isNotBlank() } ?: emptyList()
+        val currentHiddenList = prefsHiddenList.getStringSet("hidden_list_packages", emptySet()) ?: emptySet()
 
         val launcherApps = getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
         val userManager = getSystemService(Context.USER_SERVICE) as UserManager
@@ -597,12 +612,12 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
 
         newAppInfoList.filter {
             packageManager.getLaunchIntentForPackage(it.packageName) != null &&
-                    it.packageName in currentDrawerList
+                    it.packageName in currentDrawerList && it.packageName in currentHiddenList
         }.sortedBy {
             normalizeAppName(it.loadLabel(packageManager).toString()).lowercase()
         }
 
-        val newApps = newAppList.filterNot { it in currentAppList || it in currentDrawerList.toSet() }
+        val newApps = newAppList.filterNot { it in currentAppList || it in currentDrawerList.toSet() || it in currentHiddenList }
         if (newApps.isNotEmpty()) {
             val editor = prefsNewApps.edit()
             val timestamp = System.currentTimeMillis()
@@ -613,7 +628,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
 
             editor.apply()
             prefsNewApps.edit().putStringSet("new_app_name", newApps.toSet()).apply()
-            saveListApps(newAppInfoList)
+            saveListApps(this, newAppInfoList)
         }
         needRefresh = true
     }
@@ -661,11 +676,19 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             .apply()
     }
 
-    private fun saveListApps(apps: List<ApplicationInfo>) {
+    fun saveListApps(context: Context,apps: List<ApplicationInfo>) {
         val packageNames = apps.map { it.packageName }
-        getSharedPreferences("list_prefs", MODE_PRIVATE)
+        context.getSharedPreferences("list_prefs", MODE_PRIVATE)
             .edit()
             .putStringSet("list_packages", packageNames.toSet())
+            .apply()
+    }
+
+    fun saveHiddenListApps(context: Context, apps: List<ApplicationInfo>) {
+        val packageNames = apps.map { it.packageName }
+        context.getSharedPreferences("hidden_list_prefs", MODE_PRIVATE)
+            .edit()
+            .putStringSet("hidden_list_packages", packageNames.toSet())
             .apply()
     }
 
@@ -692,14 +715,14 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         return drawerApps
     }
 
-    private fun loadListApps(): List<ApplicationInfo> {
-        val prefs = getSharedPreferences("list_prefs", MODE_PRIVATE)
+    fun loadListApps(context: Context): List<ApplicationInfo> {
+        val prefs = context.getSharedPreferences("list_prefs", MODE_PRIVATE)
         val packageNames = prefs.getStringSet("list_packages", emptySet()) ?: emptySet()
 
-        val launcherApps = getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
-        val userManager = getSystemService(Context.USER_SERVICE) as UserManager
+        val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
         val users = userManager.userProfiles
-        val currentPackage = applicationContext.packageName
+        val currentPackage = context.applicationContext.packageName
         val listApps = mutableListOf<ApplicationInfo>()
 
         if (packageNames.isEmpty()) {
@@ -714,10 +737,10 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                 }
             }
             return listApps.filter {
-                packageManager.getLaunchIntentForPackage(it.packageName) != null &&
+                context.packageManager.getLaunchIntentForPackage(it.packageName) != null &&
                         it.packageName != currentPackage // exclude "Void" itself
             }
-                .sortedBy { normalizeAppName(it.loadLabel(packageManager).toString()).lowercase() }
+                .sortedBy { normalizeAppName(it.loadLabel(context.packageManager).toString()).lowercase() }
         } else {
             for (user in users) {
                 val activities = launcherApps.getActivityList(null, user as UserHandle)
@@ -729,10 +752,31 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                 }
             }
             return listApps.sortedBy {
-                normalizeAppName(
-                    it.loadLabel(packageManager).toString()
-                ).lowercase()
+                normalizeAppName(it.loadLabel(context.packageManager).toString()).lowercase()
             }
+        }
+    }
+
+    fun loadHiddenListApps(context: Context): List<ApplicationInfo> {
+        val prefs = context.getSharedPreferences("hidden_list_prefs", MODE_PRIVATE)
+        val packageNames = prefs.getStringSet("hidden_list_packages", emptySet()) ?: emptySet()
+        val launcherApps = context.getSystemService(Context.LAUNCHER_APPS_SERVICE) as LauncherApps
+        val userManager = context.getSystemService(Context.USER_SERVICE) as UserManager
+        val users = userManager.userProfiles
+
+        val allAppsMap = mutableMapOf<String, ApplicationInfo>()
+        for (user in users) {
+            val activities = launcherApps.getActivityList(null, user as UserHandle)
+            for (activity in activities) {
+                allAppsMap[activity.applicationInfo.packageName] = activity.applicationInfo
+            }
+        }
+        val drawerApps = mutableListOf<ApplicationInfo>()
+        for (pkg in packageNames) {
+            allAppsMap[pkg]?.let { drawerApps.add(it) }
+        }
+        return drawerApps.sortedBy {
+            normalizeAppName(it.loadLabel(context.packageManager).toString()).lowercase()
         }
     }
 

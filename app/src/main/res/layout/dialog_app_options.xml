@@ -42,7 +42,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-
     <TextView
         android:id="@+id/appInfoBtn"
         style="?attr/textAppearanceBody1"
@@ -71,6 +70,33 @@
         app:layout_constraintTop_toBottomOf="@+id/appInfoBtn" />
 
     <TextView
+        android:id="@+id/hideAppBtn"
+        style="?attr/textAppearanceBody1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="18dp"
+        android:clickable="true"
+        android:gravity="start"
+        android:text="Hide app"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view7" />
+
+    <View
+        android:id="@+id/hideAppView"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="18dp"
+        android:background="@color/divider_grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/hideAppBtn" />
+
+    <TextView
         android:id="@+id/uninstallBtn"
         style="?attr/textAppearanceBody1"
         android:layout_width="0dp"
@@ -86,6 +112,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view7" />
+        app:layout_constraintTop_toBottomOf="@+id/hideAppView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

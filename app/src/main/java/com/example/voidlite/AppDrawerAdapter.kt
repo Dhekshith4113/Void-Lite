@@ -22,6 +22,7 @@ import android.graphics.drawable.LayerDrawable
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import android.util.Log
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -42,6 +43,7 @@ class AppDrawerAdapter(
     private var appList: MutableList<ApplicationInfo>,
     private val onSave: (List<ApplicationInfo>) -> Unit,
     val refreshList: () -> Unit,
+    val hideApp: (ApplicationInfo) -> Unit,
     var onAppDragStarted: ((ApplicationInfo) -> Unit)? = null
 ) : RecyclerView.Adapter<AppDrawerAdapter.ViewHolder>() {
 
@@ -107,10 +109,11 @@ class AppDrawerAdapter(
 
             override fun onDoubleTap(e: MotionEvent): Boolean {
                 val position = adapterPosition
+                Log.d("onDoubleTap", "position = $position")
                 if (position == RecyclerView.NO_POSITION || position >= appList.size) return false
 
                 val app = appList[position]
-                if (app.packageName != DROP_INDICATOR_PACKAGE) return false
+                if (app.packageName == DROP_INDICATOR_PACKAGE) return false
                 showAppOptionsDialog(context, app)
 
                 return true
@@ -358,6 +361,13 @@ class AppDrawerAdapter(
             val intent = Intent(Intent.ACTION_DELETE, packageUri)
             context.startActivity(intent)
             refreshList()
+            dialog.dismiss()
+        }
+
+        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = "Hide app"
+
+        dialogView.findViewById<TextView>(R.id.hideAppBtn).setOnClickListener {
+            hideApp(appInfo)
             dialog.dismiss()
         }
 

@@ -56,6 +56,7 @@
 
         <activity android:name="com.example.voidlite.DefaultLauncherActivity" />
         <activity android:name="com.example.voidlite.PermissionsActivity" />
+        <activity android:name="com.example.voidlite.HiddenAppsActivity" />
 
         <service
             android:name="com.example.voidlite.AppAccessibilityService"

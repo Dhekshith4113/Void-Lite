@@ -106,6 +106,7 @@ class SettingsActivity : AppCompatActivity() {
         listView = findViewById(R.id.settingsListView)
         val options = listOf(
             "Permission Stats",
+            "Hidden apps",
             "Change color theme",
             "Gestures",
             "Customization",
@@ -167,12 +168,13 @@ class SettingsActivity : AppCompatActivity() {
         listView.setOnItemClickListener { _, _, position, _ ->
             when (position) {
                 0 -> startActivity(Intent(this, PermissionsActivity::class.java))
-                1 -> showThemeDialog()
-                2 -> showGesturesDialog()
-                3 -> showCustomizationDialog()
-                4 -> startActivity(Intent(Settings.ACTION_HOME_SETTINGS))
-                5 -> startActivity(Intent(Settings.ACTION_SETTINGS))
-                6 -> try {
+                1 -> startActivity(Intent(this, HiddenAppsActivity::class.java))
+                2 -> showThemeDialog()
+                3 -> showGesturesDialog()
+                4 -> showCustomizationDialog()
+                5 -> startActivity(Intent(Settings.ACTION_HOME_SETTINGS))
+                6 -> startActivity(Intent(Settings.ACTION_SETTINGS))
+                7 -> try {
                     val intent = Intent()
                     intent.setClassName(
                         "com.samsung.android.forest",

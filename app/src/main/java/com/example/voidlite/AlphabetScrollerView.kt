@@ -80,13 +80,12 @@ class AlphabetScrollerView @JvmOverloads constructor(
                 text = letter.toString()
                 textSize = 14f
                 setTextColor(context.getColor(R.color.textColorPrimary))
-                gravity = Gravity.CENTER
                 layoutParams = LayoutParams(
                     ViewGroup.LayoutParams.WRAP_CONTENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
                 ).apply {
                     setMargins(4.dp, 2.dp, 4.dp, 2.dp)
-                    gravity = Gravity.END
+                    gravity = Gravity.CENTER
                 }
                 setPadding(4.dp, 2.dp, 4.dp, 2.dp)
             }
