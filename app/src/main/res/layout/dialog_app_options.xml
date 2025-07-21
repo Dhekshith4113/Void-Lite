@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/dialog_background"
-    android:clipToOutline="true">
+    android:background="@drawable/dialog_background">
 
     <TextView
         android:id="@+id/appNameText"
@@ -16,7 +15,7 @@
         android:layout_marginStart="18dp"
         android:layout_marginTop="18dp"
         android:layout_weight="1"
-        android:text="App Name"
+        android:text="@string/dialog_app_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,6 +38,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="18dp"
+        android:contentDescription="@string/app_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,7 +52,7 @@
         android:layout_marginEnd="18dp"
         android:clickable="true"
         android:gravity="start"
-        android:text="App info"
+        android:text="@string/app_info"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view8" />
@@ -79,7 +79,7 @@
         android:layout_marginEnd="18dp"
         android:clickable="true"
         android:gravity="start"
-        android:text="Hide app"
+        android:text="@string/hide_app"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view7" />
@@ -107,7 +107,7 @@
         android:layout_marginBottom="18dp"
         android:clickable="true"
         android:gravity="start"
-        android:text="Uninstall"
+        android:text="@string/uninstall"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"

@@ -256,7 +256,7 @@ class HiddenAppListAdapter(
             dialog.dismiss()
         }
 
-        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = "Unhide app"
+        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = context.getString(R.string.unhide_app)
 
         dialogView.findViewById<TextView>(R.id.hideAppBtn).setOnClickListener {
             showApp(appInfo)

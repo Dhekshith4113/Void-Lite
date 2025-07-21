@@ -146,7 +146,8 @@ class SettingsActivity : AppCompatActivity() {
                     if (showAppUsageView) {
                         populateAppUsageOption(appUsageView)
 
-                        appUsageView.findViewById<TextView>(R.id.totalScreenTimeToday).text = "Total screen time today:"
+                        appUsageView.findViewById<TextView>(R.id.totalScreenTimeToday).text =
+                            getString(R.string.total_screen_time_today)
                         visibilityToggle?.setImageResource(R.drawable.visibility_off_24px)
                         visibleLayout.visibility = View.VISIBLE
                     } else {
@@ -480,7 +481,7 @@ class SettingsActivity : AppCompatActivity() {
             dialogView.findViewById<RadioButton>(R.id.appListBtn).isChecked = false
             dialogView.findViewById<RadioButton>(R.id.appDrawerBtn).isChecked = true
             dialogView.findViewById<LinearLayout>(R.id.appDrawerRowSize).visibility = View.VISIBLE
-            appListTv.text = "Hide app name"
+            appListTv.text = getString(R.string.hide_app_name)
             appListSc.isChecked = SharedPreferencesManager.isHideAppNameEnabled(this)
 
             if (SharedPreferencesManager.isLandscapeMode(this)) {
@@ -515,7 +516,7 @@ class SettingsActivity : AppCompatActivity() {
             dialogView.findViewById<RadioButton>(R.id.appListBtn).isChecked = true
             dialogView.findViewById<RadioButton>(R.id.appDrawerBtn).isChecked = false
             dialogView.findViewById<LinearLayout>(R.id.appDrawerRowSize).visibility = View.GONE
-            appListTv.text = "Show app icon"
+            appListTv.text = getString(R.string.show_app_icon)
             appListSc.isChecked = SharedPreferencesManager.isShowAppIconEnabled(this)
         }
 
@@ -539,14 +540,14 @@ class SettingsActivity : AppCompatActivity() {
 
         dialogView.findViewById<RadioButton>(R.id.appListBtn).setOnClickListener {
             SharedPreferencesManager.setAppDrawerEnabled(this, false)
-            appListTv.text = "Show app icon"
+            appListTv.text = getString(R.string.show_app_icon)
             appListSc.isChecked = SharedPreferencesManager.isShowAppIconEnabled(this)
             dialogView.findViewById<LinearLayout>(R.id.appDrawerRowSize).visibility = View.GONE
         }
 
         dialogView.findViewById<RadioButton>(R.id.appDrawerBtn).setOnClickListener {
             SharedPreferencesManager.setAppDrawerEnabled(this, true)
-            appListTv.text = "Hide app name"
+            appListTv.text = getString(R.string.hide_app_name)
             appListSc.isChecked = SharedPreferencesManager.isHideAppNameEnabled(this)
             dialogView.findViewById<LinearLayout>(R.id.appDrawerRowSize).visibility = View.VISIBLE
 

@@ -24,7 +24,6 @@ import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.view.GestureDetector
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -32,8 +31,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
+import androidx.core.content.ContextCompat.getString
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
@@ -364,7 +365,7 @@ class AppDrawerAdapter(
             dialog.dismiss()
         }
 
-        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = "Hide app"
+        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = getString(context, R.string.hide_app)
 
         dialogView.findViewById<TextView>(R.id.hideAppBtn).setOnClickListener {
             hideApp(appInfo)

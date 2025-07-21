@@ -405,7 +405,7 @@ class AppListAdapter(
             dialog.dismiss()
         }
 
-        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = "Hide app"
+        dialogView.findViewById<TextView>(R.id.hideAppBtn).text = context.getString(R.string.hide_app)
 
         dialogView.findViewById<TextView>(R.id.hideAppBtn).setOnClickListener {
             hideApp(appInfo)

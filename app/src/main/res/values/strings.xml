@@ -2,4 +2,16 @@
     <string name="app_name">Void Lite</string>
     <string name="accessibility_service_description">This service is used to lock the phone.</string>
     <string name="accessibility_description">This service is used to lock the phone.</string>
+    <string name="back_button">Back button</string>
+    <string name="hidden_apps">Hidden Apps</string>
+    <string name="hidden_app_tv">There are no hidden apps.\nAdd unused or less used\napps here, to avoid clutter in\nthe main app drawer.</string>
+    <string name="dialog_app_name">App Name</string>
+    <string name="app_icon">App icon</string>
+    <string name="app_info">App info</string>
+    <string name="hide_app">Hide app</string>
+    <string name="uninstall">Uninstall</string>
+    <string name="total_screen_time_today">Total screen time today:</string>
+    <string name="hide_app_name">Hide app name</string>
+    <string name="show_app_icon">Show app icon</string>
+    <string name="unhide_app">Unhide app</string>
 </resources>
