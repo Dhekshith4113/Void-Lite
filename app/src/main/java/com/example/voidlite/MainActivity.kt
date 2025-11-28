@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                 listAdapter.removeApp(app)
                 saveHiddenListApps(this, loadHiddenListApps(this) + app)
                 saveListApps(this, listAdapter.getApps())
+                setupAlphabetScroller()
             })
 
         if (SharedPreferencesManager.isAppDrawerEnabled(this)) {
@@ -131,6 +132,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                 saveHiddenListApps(this, loadHiddenListApps(this) + app)
                 saveDrawerApps(drawerAdapter.getApps()
                     .filter { it.packageName != AppDrawerAdapter.DROP_INDICATOR_PACKAGE })
+                setupAlphabetScroller()
             })
 
         drawerRecyclerView.apply {
@@ -341,6 +343,9 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                         }
                         drawerRecyclerView.invalidateItemDecorations()
                     }
+
+                    setupAlphabetScroller()
+
                     true
                 }
 
@@ -365,6 +370,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
                         drawerAdapter.getApps()
                             .filter { it.packageName != AppDrawerAdapter.DROP_INDICATOR_PACKAGE })
                     saveListApps(this, listAdapter.getApps())
+                    setupAlphabetScroller()
                     true
                 }
 
@@ -414,6 +420,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             listAdapter.setApps(getNewlyInstalledApps())
             listAdapter.updateData(loadListApps(this).toMutableList())
             drawerAdapter.updateData(loadDrawerApps().toMutableList())
+            setupAlphabetScroller()
             needRefresh = false
         }
 //        if (!isDefaultLauncher(this)) {
