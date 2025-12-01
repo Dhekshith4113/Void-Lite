@@ -617,8 +617,8 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         }
 
         newAppInfoList.filter {
-            packageManager.getLaunchIntentForPackage(it.packageName) != null &&
-                    it.packageName in currentDrawerList && it.packageName in currentHiddenList
+            packageManager.getLaunchIntentForPackage(it.packageName) != null ||
+                    it.packageName in currentDrawerList || it.packageName in currentHiddenList
         }.sortedBy {
             normalizeAppName(it.loadLabel(packageManager).toString()).lowercase()
         }
