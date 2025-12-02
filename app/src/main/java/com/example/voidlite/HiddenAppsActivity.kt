@@ -1,6 +1,7 @@
 package com.example.voidlite
 
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
@@ -44,8 +45,13 @@ class HiddenAppsActivity : AppCompatActivity() {
             tvHiddenApps.visibility = View.GONE
             hiddenAppsView.visibility = View.VISIBLE
             hiddenAppListAdapter = HiddenAppListAdapter(this, MainActivity().loadHiddenListApps(this).toMutableList(), packageManager,
-                refreshList = {
-                    recreate()
+                refreshList = { app ->
+                    val appExists = isAppInstalled(app.packageName, packageManager)
+                    if (!appExists) {
+                        hiddenAppListAdapter.removeApp(app)
+                        MainActivity().saveHiddenListApps(this, hiddenAppListAdapter.getApps())
+                        hiddenAppListAdapter.updateData(MainActivity().loadHiddenListApps(this))
+                    }
                 },
                 showApp = { app ->
                     hiddenAppListAdapter.removeApp(app)
@@ -59,6 +65,15 @@ class HiddenAppsActivity : AppCompatActivity() {
 
             hiddenAppsView.layoutManager = LinearLayoutManager(this)
             hiddenAppsView.adapter = hiddenAppListAdapter
+        }
+    }
+
+    private fun isAppInstalled(packageName: String, packageManager: PackageManager): Boolean {
+        return try {
+            packageManager.getPackageInfo(packageName, 0)
+            true // No error? It's installed.
+        } catch (e: PackageManager.NameNotFoundException) {
+            false // Error? It's uninstalled.
         }
     }
 }

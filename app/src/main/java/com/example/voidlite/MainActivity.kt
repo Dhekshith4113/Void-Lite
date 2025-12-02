@@ -74,8 +74,13 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         recyclerView = findViewById(R.id.recyclerView)
 
         listAdapter = AppListAdapter(this, loadListApps(this).toMutableList(), packageManager,
-            refreshList = {
-                needRefresh = true
+            refreshList = { app ->
+                val appExists = isAppInstalled(app.packageName, packageManager)
+                if (!appExists) {
+                    needRefresh = true
+                    listAdapter.removeApp(app)
+                    saveListApps(this, listAdapter.getApps())
+                }
             },
             hideApp = { app ->
                 listAdapter.removeApp(app)
@@ -124,8 +129,13 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             packageManager,
             loadDrawerApps().toMutableList(),
             ::saveDrawerApps,
-            refreshList = {
-                needRefresh = true
+            refreshList = { app ->
+                val appExists = isAppInstalled(app.packageName, packageManager)
+                if (!appExists) {
+                    needRefresh = true
+                    drawerAdapter.removeApp(app)
+                    saveDrawerApps(drawerAdapter.getApps())
+                }
             },
             hideApp = { app ->
                 drawerAdapter.removeApp(app)
@@ -616,9 +626,9 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             }
         }
 
-        newAppInfoList.filter {
-            packageManager.getLaunchIntentForPackage(it.packageName) != null ||
-                    it.packageName in currentDrawerList || it.packageName in currentHiddenList
+        val filteredList = newAppInfoList.filter {
+            packageManager.getLaunchIntentForPackage(it.packageName) != null &&
+                    it.packageName !in currentDrawerList && it.packageName !in currentHiddenList
         }.sortedBy {
             normalizeAppName(it.loadLabel(packageManager).toString()).lowercase()
         }
@@ -634,7 +644,7 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
 
             editor.apply()
             prefsNewApps.edit().putStringSet("new_app_name", newApps.toSet()).apply()
-            saveListApps(this, newAppInfoList)
+            saveListApps(this, filteredList)
         }
         needRefresh = true
     }
@@ -672,6 +682,15 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         }
 
         editor.apply()
+    }
+
+    private fun isAppInstalled(packageName: String, packageManager: PackageManager): Boolean {
+        return try {
+            packageManager.getPackageInfo(packageName, 0)
+            true // No error? It's installed.
+        } catch (e: PackageManager.NameNotFoundException) {
+            false // Error? It's uninstalled.
+        }
     }
 
     private fun saveDrawerApps(apps: List<ApplicationInfo>) {

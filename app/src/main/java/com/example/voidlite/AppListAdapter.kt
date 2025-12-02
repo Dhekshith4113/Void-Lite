@@ -39,7 +39,7 @@ class AppListAdapter(
     private val context: Context,
     private var apps: MutableList<ApplicationInfo>,
     private val pm: PackageManager,
-    val refreshList: () -> Unit,
+    val refreshList: (ApplicationInfo) -> Unit,
     val hideApp: (ApplicationInfo) -> Unit,
     var onAppDragStarted: ((ApplicationInfo) -> Unit)? = null
 ) : RecyclerView.Adapter<AppListAdapter.ViewHolder>() {
@@ -401,7 +401,7 @@ class AppListAdapter(
             val packageUri = Uri.parse("package:${appInfo.packageName}") // Replace with target package
             val intent = Intent(Intent.ACTION_DELETE, packageUri)
             context.startActivity(intent)
-            refreshList()
+            refreshList(appInfo)
             dialog.dismiss()
         }
 
