@@ -36,7 +36,6 @@ class HiddenAppListAdapter(
     private val context: Context,
     private var apps: MutableList<ApplicationInfo>,
     private val pm: PackageManager,
-    val refreshList: (ApplicationInfo) -> Unit,
     val showApp: (ApplicationInfo) -> Unit,
 ) : RecyclerView.Adapter<HiddenAppListAdapter.ViewHolder>() {
 
@@ -252,7 +251,6 @@ class HiddenAppListAdapter(
             val packageUri = Uri.parse("package:${appInfo.packageName}") // Replace with target package
             val intent = Intent(Intent.ACTION_DELETE, packageUri)
             context.startActivity(intent)
-            refreshList(appInfo)
             dialog.dismiss()
         }
 

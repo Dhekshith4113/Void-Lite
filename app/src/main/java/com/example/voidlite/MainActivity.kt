@@ -1,8 +1,10 @@
 package com.example.voidlite
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherApps
 import android.content.pm.PackageManager
@@ -43,6 +45,60 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
     private var shouldMoveIndicator = true
     private var gradientOverlay: GradientOverlayView? = null
 
+    private val packageReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            if (intent?.action == Intent.ACTION_PACKAGE_FULLY_REMOVED ||
+                intent?.action == Intent.ACTION_PACKAGE_REMOVED) {
+
+                val packageName = intent.data?.schemeSpecificPart ?: return
+
+                // --- 1. Handle Mini Drawer Removal ---
+                val drawerApps = drawerAdapter.getApps().toMutableList()
+                val appInDrawer = drawerApps.find { it.packageName == packageName }
+
+                if (appInDrawer != null) {
+                    // Remove from UI
+                    drawerAdapter.removeApp(appInDrawer)
+
+                    // Remove from SharedPreferences (Persistence)
+                    // We filter out the drop indicator and the uninstalled package
+                    val updatedList = drawerAdapter.getApps()
+                        .filter { it.packageName != AppDrawerAdapter.DROP_INDICATOR_PACKAGE }
+                    saveDrawerApps(updatedList)
+                }
+                // Also explicitly clean the string in prefs to be safe (Fixes the reinstall bug)
+                else {
+                    val prefs = getSharedPreferences("drawer_prefs", MODE_PRIVATE)
+                    val storedList = prefs.getString("drawer_ordered_packages", "") ?: ""
+                    if (storedList.contains(packageName)) {
+                        val newList = storedList.split(",")
+                            .filter { it.isNotBlank() && it != packageName }
+                            .joinToString(",")
+                        prefs.edit().putString("drawer_ordered_packages", newList).apply()
+                    }
+                }
+
+                // --- 2. Handle Hidden Apps (Cleanup only) ---
+                // Even though HiddenAppsActivity handles the UI, we clean the prefs here
+                // to ensure state is correct if HiddenAppsActivity is closed.
+                val hiddenPrefs = getSharedPreferences("hidden_list_prefs", MODE_PRIVATE)
+                val hiddenList = hiddenPrefs.getStringSet("hidden_list_packages", mutableSetOf())?.toMutableSet()
+                if (hiddenList != null && hiddenList.contains(packageName)) {
+                    hiddenList.remove(packageName)
+                    hiddenPrefs.edit().putStringSet("hidden_list_packages", hiddenList).apply()
+                }
+
+                // --- 3. Handle Main List Removal ---
+                val mainApps = listAdapter.getApps().toMutableList()
+                val appInMain = mainApps.find { it.packageName == packageName }
+                if (appInMain != null) {
+                    listAdapter.removeApp(appInMain)
+                    saveListApps(this@MainActivity, listAdapter.getApps())
+                }
+            }
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,10 +120,17 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             prefsInstalledApps.edit().putBoolean("first_time", true).apply()
         }
 
-//        if (!isDefaultLauncher(this)) {
-//            finish()
-//            startActivity(Intent(this, DefaultLauncherActivity::class.java))
-//        }
+        // Register the receiver
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_PACKAGE_REMOVED)
+            addAction(Intent.ACTION_PACKAGE_FULLY_REMOVED)
+            addDataScheme("package")
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(packageReceiver, filter, Context.RECEIVER_EXPORTED)
+        } else {
+            registerReceiver(packageReceiver, filter)
+        }
 
         gestureDetector = GestureDetector(this, SwipeGestureListener())
 
@@ -129,14 +192,6 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             packageManager,
             loadDrawerApps().toMutableList(),
             ::saveDrawerApps,
-            refreshList = { app ->
-                val appExists = isAppInstalled(app.packageName, packageManager)
-                if (!appExists) {
-                    needRefresh = true
-                    drawerAdapter.removeApp(app)
-                    saveDrawerApps(drawerAdapter.getApps())
-                }
-            },
             hideApp = { app ->
                 drawerAdapter.removeApp(app)
                 saveHiddenListApps(this, loadHiddenListApps(this) + app)
@@ -819,15 +874,6 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         return normalized
     }
 
-    private fun isDefaultLauncher(context: Context): Boolean {
-        val pm = context.packageManager
-        val intent = Intent(Intent.ACTION_MAIN).apply {
-            addCategory(Intent.CATEGORY_HOME)
-        }
-        val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-        return resolveInfo?.activityInfo?.packageName == context.packageName
-    }
-
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         gestureDetector.onTouchEvent(ev)
         return super.dispatchTouchEvent(ev)
@@ -898,6 +944,11 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             SharedPreferencesManager.setLandscapeMode(this, false)
         }
         recreate()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(packageReceiver)
     }
 
 }
