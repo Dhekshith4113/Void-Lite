@@ -110,15 +110,6 @@ class HiddenAppsActivity : AppCompatActivity() {
         }
     }
 
-    private fun isAppInstalled(packageName: String, packageManager: PackageManager): Boolean {
-        return try {
-            packageManager.getPackageInfo(packageName, 0)
-            true // No error? It's installed.
-        } catch (e: PackageManager.NameNotFoundException) {
-            false // Error? It's uninstalled.
-        }
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(hiddenAppsReceiver)

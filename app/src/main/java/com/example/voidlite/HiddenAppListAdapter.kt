@@ -271,11 +271,6 @@ class HiddenAppListAdapter(
         dialog.show()
     }
 
-    fun updateData(newList: List<ApplicationInfo>) {
-        this.apps = newList.toMutableList()
-        notifyDataSetChanged() // Refreshes only the list, not the whole screen
-    }
-
     fun getApps(): List<ApplicationInfo> {
         apps.sortedBy { it.packageName }
         return apps.toList()
