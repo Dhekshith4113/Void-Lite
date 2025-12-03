@@ -21,7 +21,7 @@
             style="@style/AppTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Customization" />
+            android:text="@string/customization" />
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="App List"
+                android:text="@string/app_list"
                 style="@style/AppBaseText"/>
 
             <RadioButton
@@ -46,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="App Drawer"
+                android:text="@string/app_drawer"
                 style="@style/AppBaseText"/>
 
         </RadioGroup>
@@ -62,7 +62,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Show app icon"
+                android:text="@string/show_app_icon"
                 style="@style/AppBaseText"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:text="Row size"
+                android:text="@string/row_size"
                 style="@style/AppBaseText"/>
 
             <RadioGroup
@@ -95,14 +95,14 @@
                     android:id="@+id/rowSizeFour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4"
+                    android:text="@string/_4"
                     style="@style/AppBaseText"/>
 
                 <RadioButton
                     android:id="@+id/rowSizeFive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5"
+                    android:text="@string/_5"
                     style="@style/AppBaseText"/>
 
             </RadioGroup>
@@ -126,7 +126,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Show mini drawer" />
+                android:text="@string/show_mini_drawer" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/miniDrawerSwitch"
@@ -145,7 +145,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Show app name"
+                android:text="@string/show_app_name"
                 style="@style/AppBaseText"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -166,14 +166,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:text="App count"
+                android:text="@string/app_count"
                 style="@style/AppBaseText"/>
 
             <ImageButton
                 android:id="@+id/incrementButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:contentDescription="Add"
+                android:contentDescription="@string/add"
                 android:src="@drawable/sharp_add_24"
                 android:background="@android:color/transparent"
                 app:tint="@color/textColorPrimary" />
@@ -184,14 +184,14 @@
                 android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="0"
+                android:text="@string/_0"
                 style="@style/AppBaseText"/>
 
             <ImageButton
                 android:id="@+id/decrementButton"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:contentDescription="Remove"
+                android:contentDescription="@string/remove"
                 android:src="@drawable/sharp_remove_24"
                 android:background="@android:color/transparent"
                 app:tint="@color/textColorPrimary" />
@@ -213,7 +213,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Apply theme for app icons"
+                android:text="@string/apply_theme_for_app_icons"
                 style="@style/AppBaseText"/>
 
             <androidx.appcompat.widget.SwitchCompat
@@ -234,7 +234,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:text="App icon shape"
+                android:text="@string/app_icon_shape"
                 style="@style/AppBaseText"/>
 
             <RadioGroup
@@ -246,14 +246,14 @@
                     android:id="@+id/roundAppIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Round"
+                    android:text="@string/round"
                     style="@style/AppBaseText"/>
 
                 <RadioButton
                     android:id="@+id/squricleAppIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Squricle"
+                    android:text="@string/squricle"
                     style="@style/AppBaseText"/>
 
             </RadioGroup>

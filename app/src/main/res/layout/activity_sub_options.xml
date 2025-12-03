@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose Theme"
+        android:text="@string/choose_theme"
         style="@style/AppTitleText"
         android:gravity="center"/>
 
@@ -24,21 +24,21 @@
             android:id="@+id/radioDark"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dark Mode"
+            android:text="@string/dark_mode"
             style="@style/AppBaseText"/>
 
         <RadioButton
             android:id="@+id/radioLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Light Mode"
+            android:text="@string/light_mode"
             style="@style/AppBaseText"/>
 
         <RadioButton
             android:id="@+id/radioSystem"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="System Default"
+            android:text="@string/system_default"
             style="@style/AppBaseText"/>
 
     </RadioGroup>

@@ -277,8 +277,11 @@ class HiddenAppListAdapter(
     }
 
     fun removeApp(app: ApplicationInfo) {
-        apps.removeAll { it.packageName == app.packageName }
-        notifyDataSetChanged()
+        val index = apps.indexOfFirst { it.packageName == app.packageName }
+        if (index != -1) {
+            apps.removeAt(index)
+            notifyItemRemoved(index)
+        }
     }
 
 }

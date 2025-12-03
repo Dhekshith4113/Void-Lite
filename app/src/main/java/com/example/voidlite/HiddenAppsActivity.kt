@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -70,7 +69,7 @@ class HiddenAppsActivity : AppCompatActivity() {
         }
 
         hiddenAppsView = findViewById(R.id.hiddenAppsView)
-        backButton = findViewById(R.id.backButton)
+        backButton = findViewById(R.id.backBtn)
         tvHiddenApps = findViewById(R.id.tvHiddenApps)
 
         backButton.setOnClickListener {

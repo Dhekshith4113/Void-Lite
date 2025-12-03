@@ -132,6 +132,11 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
             registerReceiver(packageReceiver, filter)
         }
 
+        if (!isDefaultLauncher(this)) {
+            finish()
+            startActivity(Intent(this, DefaultLauncherActivity::class.java))
+        }
+
         gestureDetector = GestureDetector(this, SwipeGestureListener())
 
         recyclerView = findViewById(R.id.recyclerView)
@@ -872,6 +877,15 @@ class MainActivity : AppCompatActivity(), GradientUpdateListener {
         }
 
         return normalized
+    }
+
+    private fun isDefaultLauncher(context: Context): Boolean {
+        val pm = context.packageManager
+        val intent = Intent(Intent.ACTION_MAIN).apply {
+            addCategory(Intent.CATEGORY_HOME)
+        }
+        val resolveInfo = pm.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+        return resolveInfo?.activityInfo?.packageName == context.packageName
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {

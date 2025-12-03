@@ -34,6 +34,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.content.ContextCompat.getString
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 
@@ -379,11 +380,33 @@ class AppDrawerAdapter(
         dialog.show()
     }
 
-    fun updateData(newApps: MutableList<ApplicationInfo>) {
-        this.appList = newApps
-        notifyDataSetChanged()
+    fun updateData(newApps: List<ApplicationInfo>) {
+        val oldList = this.appList
 
-        // Force spacing recalculation
+        // 1. Calculate the difference
+        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize() = oldList.size
+            override fun getNewListSize() = newApps.size
+
+            override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean {
+                return oldList[oldPos].packageName == newApps[newPos].packageName
+            }
+
+            override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean {
+                return oldList[oldPos] == newApps[newPos]
+            }
+        })
+
+        // 2. Update the backing data (Defensive copy)
+        this.appList = newApps.toMutableList()
+
+        // 3. Dispatch updates (Triggers animations)
+        diffResult.dispatchUpdatesTo(this)
+
+        // 4. Handle Decoration
+        // Since dispatchUpdatesTo is synchronous on the main thread,
+        // we can usually invalidate decorations immediately after.
+        // If your decoration relies on the View being laid out (measured), keep the post.
         parent?.post {
             spacingDecoration?.invalidateSpacing()
             parent?.invalidateItemDecorations()

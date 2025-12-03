@@ -7,6 +7,9 @@
     <color name="enable">#006600</color>
     <color name="disable">#660000</color>
 
+    <color name="default_primary">#FFFFFFFF</color>
+    <color name="default_secondary">#FF000000</color>
+
     <color name="themed_icon_background">#FF808080</color>
     <color name="themed_icon_foreground">#FF000000</color>
 </resources>

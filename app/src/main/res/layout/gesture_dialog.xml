@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:text="Swipe right to lock phone"
+        android:text="@string/swipe_right_to_lock_phone"
         app:layout_constraintBottom_toBottomOf="@+id/lockSwitch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/lockSwitch" />
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="18dp"
-        android:text="Double tap on mini app\ndrawer to lock phone"
+        android:text="@string/double_tap_on_mini_app_drawer_to_lock_phone"
         app:layout_constraintBottom_toBottomOf="@+id/doubleTapSwitch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/doubleTapSwitch" />

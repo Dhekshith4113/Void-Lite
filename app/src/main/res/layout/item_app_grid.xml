@@ -13,7 +13,7 @@
         android:layout_width="51dp"
         android:layout_height="51dp"
         android:scaleType="centerInside"
-        android:contentDescription="App icon" />
+        android:contentDescription="@string/app_icon" />
 
     <TextView
         android:id="@+id/appName"

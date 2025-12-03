@@ -14,6 +14,8 @@
     <color name="backgroundColor">#FFFFFF</color>
     <color name="enable">#008800</color>
     <color name="disable">#880000</color>
+    <color name="default_primary">#FF000000</color>
+    <color name="default_secondary">#FFFFFFFF</color>
 
     <color name="themed_icon_background">#80808080</color>
     <color name="themed_icon_foreground">#FFFFFFFF</color>

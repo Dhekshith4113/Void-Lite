@@ -57,7 +57,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Settings"
+            android:contentDescription="@string/settings"
             app:srcCompat="@drawable/settings_24px"
             app:tint="@color/textColorPrimary"
             app:layout_constraintTop_toTopOf="@+id/appDrawerRecyclerView"

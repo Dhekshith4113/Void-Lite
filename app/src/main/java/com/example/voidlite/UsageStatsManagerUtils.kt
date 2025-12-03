@@ -12,6 +12,8 @@ import java.util.Calendar
 
 object UsageStatsManagerUtils {
 
+    private const val MAX_SESSION_DURATION_MS = 4 * 60 * 60 * 1000L
+
     fun hasUsageStatsPermission(context: Context): Boolean {
         val appOps = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager
         val mode = appOps.checkOpNoThrow(
@@ -53,7 +55,7 @@ object UsageStatsManagerUtils {
                     // Close previous session
                     lastUsedApp?.let {
                         val duration = event.timeStamp - lastEventTime
-                        if (duration > 0 && duration < 1000 * 60 * 60 * 4) {
+                        if (duration in 1..<MAX_SESSION_DURATION_MS) {
                             usageMap[it] = usageMap.getOrDefault(it, 0L) + duration
                         }
                     }
@@ -64,7 +66,7 @@ object UsageStatsManagerUtils {
                 UsageEvents.Event.MOVE_TO_BACKGROUND -> {
                     if (packageName == lastUsedApp) {
                         val duration = event.timeStamp - lastEventTime
-                        if (duration > 0 && duration < 1000 * 60 * 60 * 4) {
+                        if (duration in 1..<MAX_SESSION_DURATION_MS) {
                             usageMap[packageName] =
                                 usageMap.getOrDefault(packageName, 0L) + duration
                         }
@@ -167,7 +169,7 @@ object UsageStatsManagerUtils {
         return packages
     }
 
-    fun normalizeAppName(label: String): String {
+    private fun normalizeAppName(label: String): String {
         val prefixesToRemove = listOf("Samsung ", "Google ", "Galaxy ")
         var normalized = label
 

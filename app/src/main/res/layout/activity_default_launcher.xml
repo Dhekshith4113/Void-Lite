@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black"
+    android:background="@color/default_secondary"
     android:gravity="center">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="18dp"
-        android:contentDescription="App Icon"
-        android:src="@mipmap/ic_launcher_monochrome"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        app:cardCornerRadius="40dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher_round"
+            android:contentDescription="@string/app_icon"/>
+
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/btnSet"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="18dp"
-        android:text="Set as default home screen"
-        android:textColor="@color/white"
+        android:text="@string/set_as_default_home_screen"
+        android:textColor="@color/default_primary"
         android:background="@drawable/button_outline_white"/>
 
 </LinearLayout>

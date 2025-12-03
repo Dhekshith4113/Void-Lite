@@ -31,6 +31,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.imageview.ShapeableImageView
 import java.lang.ref.WeakReference
@@ -422,46 +423,96 @@ class AppListAdapter(
         dialog.show()
     }
 
-    fun updateData(newApps: MutableList<ApplicationInfo>) {
-        // Clear caches when data changes
+    fun updateData(newApps: List<ApplicationInfo>) {
+        // Clear caches first so binding uses fresh data
         normalizedNameCache.clear()
         firstLetterCache.clear()
 
-        this.apps = newApps
-        notifyDataSetChanged()
+        val diffCallback = AppDiffCallback(this.apps, newApps)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
+        this.apps = newApps.toMutableList()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun setApps(newApps: Set<String>) {
+        val oldList = this.newAppPackages.toList() // Assuming newAppPackages is your backing data
+        val newList = newApps.toList()
+
+        val diffResult = DiffUtil.calculateDiff(object : DiffUtil.Callback() {
+            override fun getOldListSize() = oldList.size
+            override fun getNewListSize() = newList.size
+
+            override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                // Compare unique IDs (for Strings, the string itself is the ID)
+                return oldList[oldItemPosition] == newList[newItemPosition]
+            }
+
+            override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+                // Compare visual content
+                return oldList[oldItemPosition] == newList[newItemPosition]
+            }
+        })
+
+        // Update the backing data
         this.newAppPackages = newApps
-        notifyDataSetChanged()
+        // OR if you switched backing data to List: this.items = newList
+
+        // Apply the changes
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun addApp(app: ApplicationInfo) {
-        if (apps.none { it.packageName == app.packageName }) {
-            apps.add(app)
-            apps.sortBy { getNormalizedNameCached(it).lowercase() }
-            notifyDataSetChanged()
+        // 1. Fast exit if duplicate exists
+        if (apps.any { it.packageName == app.packageName }) return
+
+        // 2. Calculate the sort key for the new item
+        val newAppName = getNormalizedNameCached(app).lowercase()
+
+        // 3. Find the correct insertion index.
+        // We look for the first item in the list that should come *after* our new item.
+        var insertIndex = apps.indexOfFirst { existingApp ->
+            getNormalizedNameCached(existingApp).lowercase() > newAppName
         }
+
+        // 4. If indexOfFirst returns -1, it means the new item is alphabetically last
+        if (insertIndex == -1) {
+            insertIndex = apps.size
+        }
+
+        // 5. Insert at the specific index and notify ONLY that position
+        apps.add(insertIndex, app)
+        notifyItemInserted(insertIndex)
+
+        // Optional: If your list has headers or position-dependent logic,
+        // you might need to update items below the insertion:
+        // notifyItemRangeChanged(insertIndex, apps.size - insertIndex)
     }
 
     fun removeApp(app: ApplicationInfo) {
-        // Remove from caches
-        normalizedNameCache.remove(app.packageName)
-        firstLetterCache.remove(app.packageName)
+        // 1. Find the index of the item to remove
+        val index = apps.indexOfFirst { it.packageName == app.packageName }
 
-        apps.removeAll { it.packageName == app.packageName }
-        notifyDataSetChanged()
+        if (index != -1) {
+            // 2. Remove from caches
+            normalizedNameCache.remove(app.packageName)
+            firstLetterCache.remove(app.packageName)
+
+            // 3. Remove from the list
+            apps.removeAt(index)
+
+            // 4. Notify the adapter of the specific removal
+            notifyItemRemoved(index)
+
+            // 5. (Optional) Update positions of items below the removed item
+            // This is necessary if your list has alternating row colors or displays rank numbers.
+            // notifyItemRangeChanged(index, apps.size - index)
+        }
     }
 
     fun getApps(): List<ApplicationInfo> {
         apps.sortBy { getNormalizedNameCached(it).lowercase() }
         return apps.toList()
-    }
-
-    // Method to clear caches if memory is needed
-    fun clearCaches() {
-        normalizedNameCache.clear()
-        firstLetterCache.clear()
     }
 
 }
@@ -614,5 +665,25 @@ class AppIconDragShadowBuilder(val context: Context, appInfo: ApplicationInfo, p
         layerDrawable.setLayerInset(1, negativePadding, negativePadding, negativePadding, negativePadding)
 
         return layerDrawable
+    }
+}
+
+class AppDiffCallback(
+    private val oldList: List<ApplicationInfo>,
+    private val newList: List<ApplicationInfo>
+) : DiffUtil.Callback() {
+
+    override fun getOldListSize() = oldList.size
+    override fun getNewListSize() = newList.size
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        // Compare unique IDs (e.g., package name)
+        return oldList[oldItemPosition].packageName == newList[newItemPosition].packageName
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        // Compare visual content (e.g., label, icon state)
+        // Note: ApplicationInfo doesn't implement equals() well, so you might need specific checks
+        return oldList[oldItemPosition].packageName == newList[newItemPosition].packageName
     }
 }

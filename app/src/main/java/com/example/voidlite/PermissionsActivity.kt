@@ -25,7 +25,7 @@ class PermissionsActivity : AppCompatActivity() {
             insets
         }
 
-        val backButton = findViewById<ImageButton>(R.id.backButton)
+        val backButton = findViewById<ImageButton>(R.id.backBtn)
         backButton.setOnClickListener {
             finish()
         }
@@ -35,18 +35,18 @@ class PermissionsActivity : AppCompatActivity() {
 
         if (UsageStatsManagerUtils.hasUsageStatsPermission(this)) {
             btnOpenUsage.setBackgroundColor(getColor(R.color.disable))
-            btnOpenUsage.text = "Remove permission"
+            btnOpenUsage.text = getString(R.string.remove_permission)
         } else {
             btnOpenUsage.setBackgroundColor(getColor(R.color.enable))
-            btnOpenUsage.text = "Grant permission"
+            btnOpenUsage.text = getString(R.string.grant_permission)
         }
 
         if (AppAccessibilityService.isAccessibilityServiceEnabled()) {
             btnOpenAccessibility.setBackgroundColor(getColor(R.color.disable))
-            btnOpenAccessibility.text = "Remove permission"
+            btnOpenAccessibility.text = getString(R.string.remove_permission)
         } else {
             btnOpenAccessibility.setBackgroundColor(getColor(R.color.enable))
-            btnOpenAccessibility.text = "Grant permission"
+            btnOpenAccessibility.text = getString(R.string.grant_permission)
         }
 
         btnOpenUsage.setOnClickListener {
@@ -68,18 +68,18 @@ class PermissionsActivity : AppCompatActivity() {
 
         if (UsageStatsManagerUtils.hasUsageStatsPermission(this)) {
             btnOpenUsage.setBackgroundColor(getColor(R.color.disable))
-            btnOpenUsage.text = "Remove permission"
+            btnOpenUsage.text = getString(R.string.remove_permission)
         } else {
             btnOpenUsage.setBackgroundColor(getColor(R.color.enable))
-            btnOpenUsage.text = "Grant permission"
+            btnOpenUsage.text = getString(R.string.grant_permission)
         }
 
         if (AppAccessibilityService.isAccessibilityServiceEnabled()) {
             btnOpenAccessibility.setBackgroundColor(getColor(R.color.disable))
-            btnOpenAccessibility.text = "Remove permission"
+            btnOpenAccessibility.text = getString(R.string.remove_permission)
         } else {
             btnOpenAccessibility.setBackgroundColor(getColor(R.color.enable))
-            btnOpenAccessibility.text = "Grant permission"
+            btnOpenAccessibility.text = getString(R.string.grant_permission)
         }
     }
 }
